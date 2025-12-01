@@ -13,8 +13,8 @@ const MOCK_USERS = {
   },
 };
 
-// Ativa modo mock quando API não está configurada ou em desenvolvimento
-const USE_MOCK = !import.meta.env.VITE_API_URL || import.meta.env.DEV;
+// Ativa modo mock apenas quando API não está configurada
+const USE_MOCK = !import.meta.env.VITE_API_URL;
 
 export const authService = {
   /**
