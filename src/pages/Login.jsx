@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Mail, Lock } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
@@ -9,13 +9,20 @@ import { isValidEmail } from '../utils/validators'
 
 function Login() {
   const navigate = useNavigate()
-  const { login, loading, error, clearError } = useAuth()
+  const { login, loading, error, clearError, user, isAdmin } = useAuth()
 
   const [formData, setFormData] = useState({
     email: '',
     senha: '',
   })
   const [formErrors, setFormErrors] = useState({})
+
+  // Redirecionar quando o user for definido
+  useEffect(() => {
+    if (user) {
+      navigate(isAdmin ? '/admin' : '/dashboard', { replace: true })
+    }
+  }, [user, isAdmin, navigate])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -55,14 +62,8 @@ function Login() {
     if (!validate()) return
 
     try {
-      const response = await login(formData.email, formData.senha)
-
-      // Redirecionar baseado no tipo de usuário
-      if (response.investidor?.isAdmin) {
-        navigate('/admin')
-      } else {
-        navigate('/dashboard')
-      }
+      await login(formData.email, formData.senha)
+      // Redirecionamento é feito pelo useEffect quando user é atualizado
     } catch (err) {
       // Erro já é tratado pelo AuthContext
       console.error('Erro no login:', err)
