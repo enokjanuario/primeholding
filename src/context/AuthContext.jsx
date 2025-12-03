@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       const token = getToken()
+      console.log('checkAuth - token exists:', !!token)
 
       if (!token) {
         setLoading(false)
@@ -21,6 +22,7 @@ export function AuthProvider({ children }) {
 
       try {
         const userData = await authService.getMe()
+        console.log('checkAuth - userData:', userData)
         setUser(userData)
       } catch (err) {
         console.error('Erro ao verificar autenticação:', err)
@@ -41,9 +43,12 @@ export function AuthProvider({ children }) {
 
     try {
       const response = await authService.login(email, senha)
+      console.log('Login response:', response)
+      console.log('Setting user:', response.investidor)
       setUser(response.investidor)
       return response
     } catch (err) {
+      console.error('Login error:', err)
       setError(err.message || 'Erro ao fazer login')
       throw err
     } finally {

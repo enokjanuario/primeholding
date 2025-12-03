@@ -19,8 +19,11 @@ function Login() {
 
   // Redirecionar quando o user for definido
   useEffect(() => {
+    console.log('Login useEffect - user:', user, 'isAdmin:', isAdmin)
     if (user) {
-      navigate(isAdmin ? '/admin' : '/dashboard', { replace: true })
+      const targetPath = isAdmin ? '/admin' : '/dashboard'
+      console.log('Redirecting to:', targetPath)
+      navigate(targetPath, { replace: true })
     }
   }, [user, isAdmin, navigate])
 
