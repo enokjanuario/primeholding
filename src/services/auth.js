@@ -24,8 +24,12 @@ export const authService = {
    * @returns {Promise<{token: string, investidor: object}>}
    */
   async login(email, senha) {
+    console.log('authService.login - USE_MOCK:', USE_MOCK);
+    console.log('authService.login - VITE_API_URL:', import.meta.env.VITE_API_URL);
+
     // Modo mock para desenvolvimento
     if (USE_MOCK) {
+      console.log('Using MOCK mode');
       const mockUser = MOCK_USERS[email.toLowerCase()];
 
       if (mockUser && mockUser.senha === senha) {
@@ -38,10 +42,16 @@ export const authService = {
       throw new Error('Email ou senha inválidos');
     }
 
+    console.log('Using REAL API mode');
     const response = await api.post('/login', { email, senha });
+    console.log('API response:', response);
 
     if (response.token) {
+      console.log('Saving token to localStorage');
       setToken(response.token);
+      console.log('Token saved, verifying:', localStorage.getItem('prime_token'));
+    } else {
+      console.log('No token in response!');
     }
 
     return response;
