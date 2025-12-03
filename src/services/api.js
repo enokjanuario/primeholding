@@ -38,11 +38,13 @@ async function request(endpoint, options = {}) {
 
     // Tentar parsear como JSON
     let data;
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      data = await response.text();
+    const text = await response.text();
+
+    // Sempre tentar parsear como JSON primeiro
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = text;
     }
 
     // Se não for sucesso, lançar erro
