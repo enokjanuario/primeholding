@@ -31,6 +31,7 @@ function GestaoInvestidores() {
   const [showModal, setShowModal] = useState(false)
   const [editingInvestidor, setEditingInvestidor] = useState(null)
   const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
 
   const [formData, setFormData] = useState({
     nome: '',
@@ -78,6 +79,7 @@ function GestaoInvestidores() {
   const paginatedData = investidoresFiltrados.slice(startIndex, startIndex + itemsPerPage)
 
   const handleOpenModal = (investidor = null) => {
+    setFormError('')
     if (investidor) {
       setEditingInvestidor(investidor)
       setFormData({
@@ -104,7 +106,7 @@ function GestaoInvestidores() {
 
   const handleSubmit = async () => {
     setFormLoading(true)
-    setError('')
+    setFormError('')
 
     try {
       if (editingInvestidor) {
@@ -117,7 +119,7 @@ function GestaoInvestidores() {
       setShowModal(false)
       loadInvestidores()
     } catch (err) {
-      setError(err.message || 'Erro ao salvar investidor')
+      setFormError(err.message || 'Erro ao salvar investidor')
     } finally {
       setFormLoading(false)
     }
@@ -316,6 +318,9 @@ function GestaoInvestidores() {
         }
       >
         <div className="space-y-4">
+          {formError && (
+            <Alert variant="error" message={formError} onClose={() => setFormError('')} />
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="Nome Completo"
