@@ -32,6 +32,7 @@ function GestaoInvestidores() {
   const [editingInvestidor, setEditingInvestidor] = useState(null)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
 
   const [formData, setFormData] = useState({
     nome: '',
@@ -41,6 +42,38 @@ function GestaoInvestidores() {
     scpsVinculadas: [],
     status: 'Ativo',
   })
+
+  // Máscaras de input
+  const maskCPF = (value) => {
+    const numbers = value.replace(/\D/g, '').slice(0, 11)
+    return numbers
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+  }
+
+  const maskTelefone = (value) => {
+    const numbers = value.replace(/\D/g, '').slice(0, 11)
+    if (numbers.length <= 10) {
+      return numbers
+        .replace(/(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{4})(\d)/, '$1-$2')
+    }
+    return numbers
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{5})(\d)/, '$1-$2')
+  }
+
+  // Identificar erros por campo a partir da mensagem
+  const parseFieldErrors = (errorMessage) => {
+    const errors = {}
+    const msg = errorMessage.toLowerCase()
+    if (msg.includes('nome')) errors.nome = true
+    if (msg.includes('email')) errors.email = true
+    if (msg.includes('cpf')) errors.cpf = true
+    if (msg.includes('telefone')) errors.telefone = true
+    return errors
+  }
 
   useEffect(() => {
     loadInvestidores()
@@ -80,13 +113,14 @@ function GestaoInvestidores() {
 
   const handleOpenModal = (investidor = null) => {
     setFormError('')
+    setFieldErrors({})
     if (investidor) {
       setEditingInvestidor(investidor)
       setFormData({
         nome: investidor.nome || '',
         email: investidor.email || '',
-        cpf: investidor.cpf || '',
-        telefone: investidor.telefone || '',
+        cpf: maskCPF(investidor.cpf || ''),
+        telefone: maskTelefone(investidor.telefone || ''),
         scpsVinculadas: investidor.scpsVinculadas || [],
         status: investidor.status || 'Ativo',
       })
@@ -107,6 +141,7 @@ function GestaoInvestidores() {
   const handleSubmit = async () => {
     setFormLoading(true)
     setFormError('')
+    setFieldErrors({})
 
     try {
       if (editingInvestidor) {
@@ -119,7 +154,9 @@ function GestaoInvestidores() {
       setShowModal(false)
       loadInvestidores()
     } catch (err) {
-      setFormError(err.message || 'Erro ao salvar investidor')
+      const errorMsg = err.message || 'Erro ao salvar investidor'
+      setFormError(errorMsg)
+      setFieldErrors(parseFieldErrors(errorMsg))
     } finally {
       setFormLoading(false)
     }
@@ -327,6 +364,7 @@ function GestaoInvestidores() {
               value={formData.nome}
               onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
               required
+              error={fieldErrors.nome}
             />
             <Input
               label="Email"
@@ -335,20 +373,25 @@ function GestaoInvestidores() {
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               required
               disabled={!!editingInvestidor}
+              error={fieldErrors.email}
             />
             <Input
               label="CPF"
               value={formData.cpf}
-              onChange={(e) => setFormData(prev => ({ ...prev, cpf: e.target.value }))}
+              onChange={(e) => setFormData(prev => ({ ...prev, cpf: maskCPF(e.target.value) }))}
               placeholder="000.000.000-00"
               required
               disabled={!!editingInvestidor}
+              error={fieldErrors.cpf}
+              maxLength={14}
             />
             <Input
               label="Telefone"
               value={formData.telefone}
-              onChange={(e) => setFormData(prev => ({ ...prev, telefone: e.target.value }))}
+              onChange={(e) => setFormData(prev => ({ ...prev, telefone: maskTelefone(e.target.value) }))}
               placeholder="(00) 00000-0000"
+              error={fieldErrors.telefone}
+              maxLength={15}
             />
           </div>
 
