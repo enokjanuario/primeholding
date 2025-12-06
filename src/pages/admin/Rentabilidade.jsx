@@ -27,6 +27,8 @@ function Rentabilidade() {
 
   const [showModal, setShowModal] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
   const [formData, setFormData] = useState({
     mes: (new Date().getMonth() + 1).toString(),
     ano: new Date().getFullYear().toString(),
@@ -40,6 +42,17 @@ function Rentabilidade() {
     value: (currentYear - i).toString(),
     label: (currentYear - i).toString(),
   }))
+
+  // Identificar erros por campo a partir da mensagem
+  const parseFieldErrors = (errorMessage) => {
+    const errors = {}
+    const msg = errorMessage.toLowerCase()
+    if (msg.includes('scp')) errors.scp = true
+    if (msg.includes('rentabilidade') || msg.includes('percentual')) errors.rentabilidadePercent = true
+    if (msg.includes('mês') || msg.includes('mes')) errors.mes = true
+    if (msg.includes('ano')) errors.ano = true
+    return errors
+  }
 
   useEffect(() => {
     loadRentabilidades()
@@ -62,6 +75,8 @@ function Rentabilidade() {
   }
 
   const handleOpenModal = () => {
+    setFormError('')
+    setFieldErrors({})
     setFormData({
       mes: (new Date().getMonth() + 1).toString(),
       ano: new Date().getFullYear().toString(),
@@ -73,13 +88,20 @@ function Rentabilidade() {
   }
 
   const handleSubmit = async () => {
+    setFormLoading(true)
+    setFormError('')
+    setFieldErrors({})
+
+    // Validação local
     if (!formData.scp || !formData.rentabilidadePercent) {
-      setError('Preencha todos os campos obrigatórios')
+      const errors = {}
+      if (!formData.scp) errors.scp = true
+      if (!formData.rentabilidadePercent) errors.rentabilidadePercent = true
+      setFormError('Preencha todos os campos obrigatórios')
+      setFieldErrors(errors)
+      setFormLoading(false)
       return
     }
-
-    setFormLoading(true)
-    setError('')
 
     try {
       await kpisService.registrarRentabilidade({
@@ -94,7 +116,9 @@ function Rentabilidade() {
       setShowModal(false)
       loadRentabilidades()
     } catch (err) {
-      setError(err.message || 'Erro ao registrar rentabilidade')
+      const errorMsg = err.message || 'Erro ao registrar rentabilidade'
+      setFormError(errorMsg)
+      setFieldErrors(parseFieldErrors(errorMsg))
     } finally {
       setFormLoading(false)
     }
@@ -234,6 +258,9 @@ function Rentabilidade() {
         }
       >
         <div className="space-y-4">
+          {formError && (
+            <Alert variant="error" message={formError} onClose={() => setFormError('')} />
+          )}
           <div className="grid grid-cols-2 gap-4">
             <Select
               label="Mês"
@@ -241,6 +268,7 @@ function Rentabilidade() {
               onChange={(e) => setFormData(prev => ({ ...prev, mes: e.target.value }))}
               options={MESES.map(m => ({ value: m.value.toString(), label: m.label }))}
               required
+              error={fieldErrors.mes}
             />
             <Select
               label="Ano"
@@ -248,6 +276,7 @@ function Rentabilidade() {
               onChange={(e) => setFormData(prev => ({ ...prev, ano: e.target.value }))}
               options={anos}
               required
+              error={fieldErrors.ano}
             />
           </div>
 
@@ -258,6 +287,7 @@ function Rentabilidade() {
             options={SCPS}
             placeholder="Selecione a SCP"
             required
+            error={fieldErrors.scp}
           />
 
           <Input
@@ -265,8 +295,9 @@ function Rentabilidade() {
             value={formData.rentabilidadePercent}
             onChange={(e) => setFormData(prev => ({ ...prev, rentabilidadePercent: e.target.value }))}
             placeholder="Ex: 2,5"
-            helperText="Use valores negativos para perdas"
+            helperText={fieldErrors.rentabilidadePercent ? undefined : "Use valores negativos para perdas"}
             required
+            error={fieldErrors.rentabilidadePercent}
           />
 
           <label className="flex items-center gap-3 cursor-pointer">

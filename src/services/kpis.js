@@ -18,7 +18,7 @@ export const kpisService = {
    * @returns {Promise<{dados: array}>}
    */
   async getEvolucaoPatrimonio() {
-    return api.get('/evolucao-patrimonio');
+    return api.get('/evolucaoPatrimonio');
   },
 
   /**
@@ -26,7 +26,7 @@ export const kpisService = {
    * @returns {Promise<{dados: array}>}
    */
   async getRentabilidadeMensal() {
-    return api.get('/rentabilidade-mensal');
+    return api.get('/rentabilidadeMensal');
   },
 
   /**
