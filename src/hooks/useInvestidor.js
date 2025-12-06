@@ -7,6 +7,7 @@ export function useInvestidor() {
   const [dashboard, setDashboard] = useState(null)
   const [evolucaoPatrimonio, setEvolucaoPatrimonio] = useState([])
   const [rentabilidadeMensal, setRentabilidadeMensal] = useState([])
+  const [distribuicaoSCP, setDistribuicaoSCP] = useState([])
   const [movimentacoes, setMovimentacoes] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -19,16 +20,18 @@ export function useInvestidor() {
     setError(null)
 
     try {
-      const [dashboardData, evolucao, rentabilidade, movs] = await Promise.all([
+      const [dashboardData, evolucao, rentabilidade, distribuicao, movs] = await Promise.all([
         kpisService.getDashboard(),
         kpisService.getEvolucaoPatrimonio(),
         kpisService.getRentabilidadeMensal(),
+        kpisService.getDistribuicaoSCP(),
         kpisService.getMovimentacoes(5),
       ])
 
       setDashboard(dashboardData)
       setEvolucaoPatrimonio(evolucao.dados || [])
       setRentabilidadeMensal(rentabilidade.dados || [])
+      setDistribuicaoSCP(distribuicao.dados || [])
       setMovimentacoes(movs.dados || [])
     } catch (err) {
       console.error('Erro ao carregar dashboard:', err)
@@ -52,6 +55,7 @@ export function useInvestidor() {
     dashboard,
     evolucaoPatrimonio,
     rentabilidadeMensal,
+    distribuicaoSCP,
     movimentacoes,
     loading,
     error,

@@ -30,6 +30,14 @@ export const kpisService = {
   },
 
   /**
+   * Obtém distribuição do patrimônio por SCP
+   * @returns {Promise<{dados: array}>}
+   */
+  async getDistribuicaoSCP() {
+    return api.get('/distribuicaoSCP');
+  },
+
+  /**
    * Obtém movimentações recentes
    * @param {number} [limit=5] - Limite de movimentações
    * @returns {Promise<{dados: array}>}

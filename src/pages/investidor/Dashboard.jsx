@@ -7,7 +7,6 @@ import MovimentacoesRecentes from '../../components/dashboard/MovimentacoesRecen
 import EvolucaoPatrimonioChart from '../../components/charts/EvolucaoPatrimonioChart'
 import RentabilidadeMensalChart from '../../components/charts/RentabilidadeMensalChart'
 import DistribuicaoSCPChart from '../../components/charts/DistribuicaoSCPChart'
-import { mockDistribuicaoSCP } from '../../mocks/data'
 
 function Dashboard() {
   const { user } = useAuth()
@@ -15,6 +14,7 @@ function Dashboard() {
     dashboard,
     evolucaoPatrimonio,
     rentabilidadeMensal,
+    distribuicaoSCP,
     movimentacoes,
     loading,
     error,
@@ -47,7 +47,7 @@ function Dashboard() {
         </Card>
 
         <Card title="Distribuição por SCP">
-          <DistribuicaoSCPChart dados={mockDistribuicaoSCP} />
+          <DistribuicaoSCPChart dados={distribuicaoSCP} />
         </Card>
       </div>
 
