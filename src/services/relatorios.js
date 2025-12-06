@@ -36,7 +36,7 @@ export const relatoriosService = {
    * @returns {Promise<{dados: array}>}
    */
   async listarTodos() {
-    return api.get('/admin/relatorios');
+    return api.get('/adminRelatorios');
   },
 
   /**
@@ -54,7 +54,7 @@ export const relatoriosService = {
    * @returns {Promise<{success: boolean, id: string}>}
    */
   async publicar(dados) {
-    return api.post('/admin/relatorios', dados);
+    return api.post('/adminRelatorios', dados);
   },
 
   /**
@@ -64,7 +64,7 @@ export const relatoriosService = {
    * @returns {Promise<object>}
    */
   async atualizar(id, dados) {
-    return api.put(`/admin/relatorios/${id}`, dados);
+    return api.put(`/adminRelatorios/${id}`, dados);
   },
 
   /**
@@ -73,7 +73,7 @@ export const relatoriosService = {
    * @returns {Promise<object>}
    */
   async remover(id) {
-    return api.delete(`/admin/relatorios/${id}`);
+    return api.delete(`/adminRelatorios/${id}`);
   },
 };
 

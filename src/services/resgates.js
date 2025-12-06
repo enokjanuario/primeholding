@@ -44,7 +44,7 @@ export const resgatesService = {
    */
   async listarTodos(filtros = {}) {
     const params = new URLSearchParams(filtros).toString();
-    const endpoint = params ? `/admin/resgates?${params}` : '/admin/resgates';
+    const endpoint = params ? `/adminResgates?${params}` : '/adminResgates';
     return api.get(endpoint);
   },
 
@@ -60,7 +60,7 @@ export const resgatesService = {
    * @returns {Promise<{success: boolean}>}
    */
   async processar(id, dados) {
-    return api.put(`/admin/resgates/${id}`, dados);
+    return api.put(`/adminResgates/${id}`, dados);
   },
 
   /**

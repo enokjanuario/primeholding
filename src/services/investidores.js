@@ -31,7 +31,7 @@ export const investidoresService = {
    * @returns {Promise<{dados: array}>}
    */
   async listar() {
-    return api.get('/admin/investidores');
+    return api.get('/adminInvestidores');
   },
 
   /**
@@ -40,7 +40,7 @@ export const investidoresService = {
    * @returns {Promise<object>}
    */
   async obter(id) {
-    return api.get(`/admin/investidores/${id}`);
+    return api.get(`/adminInvestidores/${id}`);
   },
 
   /**
@@ -49,7 +49,7 @@ export const investidoresService = {
    * @returns {Promise<{success: boolean, id: string}>}
    */
   async criar(dados) {
-    return api.post('/admin/investidores', dados);
+    return api.post('/adminInvestidores', dados);
   },
 
   /**
@@ -59,7 +59,7 @@ export const investidoresService = {
    * @returns {Promise<object>}
    */
   async atualizar(id, dados) {
-    return api.put(`/admin/investidores/${id}`, dados);
+    return api.put(`/adminInvestidores/${id}`, dados);
   },
 
   /**
@@ -68,7 +68,7 @@ export const investidoresService = {
    * @returns {Promise<object>}
    */
   async desativar(id) {
-    return api.put(`/admin/investidores/${id}`, { status: 'Inativo' });
+    return api.put(`/adminInvestidores/${id}`, { status: 'Inativo' });
   },
 
   /**
@@ -77,7 +77,7 @@ export const investidoresService = {
    * @returns {Promise<object>}
    */
   async ativar(id) {
-    return api.put(`/admin/investidores/${id}`, { status: 'Ativo' });
+    return api.put(`/adminInvestidores/${id}`, { status: 'Ativo' });
   },
 
   /**
@@ -86,7 +86,7 @@ export const investidoresService = {
    * @returns {Promise<object>}
    */
   async reenviarConvite(id) {
-    return api.post(`/admin/investidores/${id}/reenviar-convite`, {});
+    return api.post(`/adminInvestidores/${id}/reenviar-convite`, {});
   },
 };
 

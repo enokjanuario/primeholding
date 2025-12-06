@@ -47,7 +47,7 @@ export const kpisService = {
    * @returns {Promise<object>} KPIs administrativos
    */
   async getAdminDashboard() {
-    return api.get('/admin/dashboard');
+    return api.get('/adminDashboard');
   },
 
   /**
@@ -62,7 +62,7 @@ export const kpisService = {
    * @returns {Promise<{success: boolean}>}
    */
   async registrarRentabilidade(dados) {
-    return api.put('/admin/rentabilidade', dados);
+    return api.put('/adminRentabilidade', dados);
   },
 
   /**
@@ -72,7 +72,7 @@ export const kpisService = {
    */
   async listarRentabilidades(filtros = {}) {
     const params = new URLSearchParams(filtros).toString();
-    const endpoint = params ? `/admin/rentabilidade?${params}` : '/admin/rentabilidade';
+    const endpoint = params ? `/adminRentabilidade?${params}` : '/adminRentabilidade';
     return api.get(endpoint);
   },
 
@@ -83,7 +83,7 @@ export const kpisService = {
    */
   async getAuditoria(filtros = {}) {
     const params = new URLSearchParams(filtros).toString();
-    const endpoint = params ? `/admin/auditoria?${params}` : '/admin/auditoria';
+    const endpoint = params ? `/adminAuditoria?${params}` : '/adminAuditoria';
     return api.get(endpoint);
   },
 };

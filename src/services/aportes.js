@@ -38,7 +38,7 @@ export const aportesService = {
    */
   async listarTodos(filtros = {}) {
     const params = new URLSearchParams(filtros).toString();
-    const endpoint = params ? `/admin/aportes?${params}` : '/admin/aportes';
+    const endpoint = params ? `/adminAportes?${params}` : '/adminAportes';
     return api.get(endpoint);
   },
 
@@ -53,7 +53,7 @@ export const aportesService = {
    * @returns {Promise<{success: boolean}>}
    */
   async processar(id, dados) {
-    return api.put(`/admin/aportes/${id}`, dados);
+    return api.put(`/adminAportes/${id}`, dados);
   },
 
   /**
